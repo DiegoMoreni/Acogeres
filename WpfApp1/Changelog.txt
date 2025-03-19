@@ -1,0 +1,9 @@
+﻿v0.4
+- Añadido número de versión en el apartado opciones.
+- Añadido changelog.
+- Al entrar en un diálogo, se selecciona automáticamente el primer campo disponible.
+- Actualizado diálogo de Editar Pagos para permitir la búsqueda por escrito del cliente.
+- El filtro de clientes ignora mayúsculas y acentos.
+
+v0.4.1
+- Añadido proyecto a github.

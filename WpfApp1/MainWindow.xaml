@@ -1,0 +1,252 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Acogeres" Height="450" Width="800" Background="White">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Margin" Value="2,2,2,2"/>
+        </Style>
+        <Style TargetType="{x:Type GridViewColumnHeader}" >
+            <EventSetter Event="SizeChanged" Handler="HandleColumnHeaderSizeChanged" />
+        </Style>
+        <DataTemplate x:Key="clienteDatos">
+            <TextBlock Text="{Binding Nombre}">
+                <TextBlock.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Nombre}"/>
+                        <TextBlock Text="{Binding DNI}"/>
+                        <TextBlock Text="{Binding IBAN}"/>
+                    </StackPanel>
+                </TextBlock.ToolTip>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="clientePagos">
+            <TextBlock Text="{Binding Nombre}">
+                <TextBlock.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Nombre}"/>
+                        <TextBlock Text="{Binding DNI}"/>
+                        <TextBlock Text="{Binding IBAN}"/>
+                        <Separator/>
+                        <TextBlock Text="{Binding Comentario}"/>
+                    </StackPanel>
+                </TextBlock.ToolTip>
+            </TextBlock>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <TabControl DockPanel.Dock="Top">
+            <TabItem >
+                <TabItem.Header>
+                    <Label Content="Datos Clientes" MouseLeftButtonDown="tabItem_Click"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <Label Content="Buscar cliente (por nombre) :"/>
+                        <TextBox Name="txtFilter" TextChanged="txtFilter_TextChanged"/>
+                    </StackPanel>
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment ="Center" Margin="2,2,2,2">
+                        <Button  ToolTip ="Añadir un cliente nuevo" Name="btnAddCliente" Click="btnAddCliente_Click">Añadir cliente</Button>
+                        <Button ToolTip="Editar un cliente existente"  Name="btnEditCliente" Click="btnEditCliente_Click">Editar cliente</Button>
+                        <Button ToolTip="Eliminar un cliente existente"  Name="btnDeleteCliente" Click="btnDeleteCliente_Click">Eliminar cliente</Button>
+                    </WrapPanel>
+                    <Separator Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <ListView Margin="10" Name="lvDatosClientes" Grid.Row="2"  Grid.ColumnSpan="2">
+                        <ListView.Resources>
+                            
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn  CellTemplate="{StaticResource clienteDatos}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Nombre" Click="lvDatosHeader_Click">Nombre</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Header="DNI" DisplayMemberBinding="{Binding DNI}"/>
+                                <GridViewColumn Header="IBAN" DisplayMemberBinding="{Binding IBAN}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Pagos" MouseLeftButtonDown="tabItem_Click"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="41*"/>
+                        <ColumnDefinition Width="435*"/>
+                        <ColumnDefinition Width="318*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.ColumnSpan="2" HorizontalAlignment="center" VerticalAlignment="center">
+                        <Label Name="txtNumPagos"  Content="El archivo contiene 33 pagos"/>
+                    </WrapPanel>
+                    <WrapPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment ="Center">
+                        <Button ToolTip="Añadir un pago nuevo"  Name="btnAddPago" Click="btnAddPago_Click">Añadir pago</Button>
+                        <Button ToolTip="Editar un pago existente" Name="btnEditPago" Click="btnEditPago_Click">Editar pago</Button>
+                        <Button ToolTip="Eliminar un pago existente" Name="btnDeletePago" Click="btnDeletePago_Click">Eliminar pago</Button>
+                    </WrapPanel>
+                    <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2,0,2"/>
+                    <ListView Margin="10,10,10,10" Name="lvPagos" Grid.Row="2"  Grid.ColumnSpan="3">
+                        <ListView.View>
+                            <GridView>
+                                <!--DisplayMemberBinding="{Binding Nombre}"-->
+                                <GridViewColumn  CellTemplate="{StaticResource clientePagos}" >
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Nombre">Nombre</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Horas" DisplayMemberBinding="{Binding Horas}"/>
+                                <GridViewColumn Header="Extra" DisplayMemberBinding="{Binding Extra}"/>
+                                <GridViewColumn Header="Comentario" DisplayMemberBinding="{Binding Comentario}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+
+            <TabItem >
+                <TabItem.Header>
+                    <Label Content="Generar archivos" MouseLeftButtonDown="tabItem_Click"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="3" VerticalAlignment="Center">
+                        <Label Content="Los archivos se generarán en las siguientes rutas:" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Name="txtRutaPagos"  Content="Pagos: Cacatua/cacatuoide/increible/cacatuosa" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Name="txtRutaDyH" Content="Datos y horas: Cacatua/cacatuoide/increible/cacatuosa" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" >
+                        <Button Name="btnGenerarArchivosPagos" Click="btnGenerarArchivosPagos_Click"  HorizontalAlignment="center" MinHeight="50">Generar archivos de Pagos</Button>
+                        <Button Name="btnGenerarArchivosDyH" Click="btnGenerarArchivosDyH_Click"  HorizontalAlignment="center" MinHeight="50">Generar archivos de Datos y Horas</Button>
+                        
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+
+            <TabItem >
+                <TabItem.Header>
+                    <Label Content="Opciones" MouseLeftButtonDown="tabItem_Click"/>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=" *"/>
+                        <ColumnDefinition Width=" Auto"/>
+                        <ColumnDefinition Width=" *"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel  Grid.Column="1" Grid.Row="1" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0"/>
+                                <ColumnDefinition Width=" *"/>
+                                <ColumnDefinition Width=" 50"/>
+                                <ColumnDefinition Width=" Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0">
+                                <Label Content="IVA"/>
+                                <Label Content="Precio por hora"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" HorizontalAlignment="Center" Grid.Row="0">
+                                <Label Name="txtIVA" Content="15%"/>
+                                <Label Name="txtPrecioHora" Content="15"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" HorizontalAlignment="Right" Grid.Row="0">
+                                <Button ToolTip="Modificar valor del IVA" Name="btnModifIVA" Click="btnModifIVA_Click">Modificar</Button>
+                                <Button ToolTip="Modificar precio por hora" Name="btnModifPrecio" Click="btnModifPrecio_Click">Modificar</Button>
+                            </StackPanel>
+                            
+                        </Grid>
+                    </StackPanel>
+                    <Separator Grid.Column="1" Grid.Row="2"/>
+                    <StackPanel  Grid.Column="1" Grid.Row="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0"/>
+                                <ColumnDefinition Width=" *"/>
+                                <ColumnDefinition Width=" 50"/>
+                                <ColumnDefinition Width=" Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0">
+                                <Label Content="Ruta de guardado de archivos de pagos"/>
+                                <Label Content="Ruta de guardado de archivos de datos y horas"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" HorizontalAlignment="Center" Grid.Row="0">
+                                <Label Name="txtRutaPagosOpciones" Content="15%"/>
+                                <Label Name="txtRutaDyHOpciones" Content="15%"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" HorizontalAlignment="Center" Grid.Row="0">
+                                <Button Name="btnModifRutaPagos" Click="btnModifRutaPagos_Click">Modificar</Button>
+                                <Button Name="btnModifRutaDyH" Click="btnModifRutaDyH_Click">Modificar</Button>
+                                <Button Name="testBug" Click="btnTestBug_Click">Bug</Button>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                        <Label Name="txtVersion" Content="1.0"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Instrucciones de uso" MouseLeftButtonDown="tabItem_Click"/>
+                </TabItem.Header>
+                <WrapPanel>
+                    
+                </WrapPanel>
+            </TabItem>
+            </TabControl>
+    </DockPanel>
+</Window>
