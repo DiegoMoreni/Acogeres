@@ -35,7 +35,10 @@ namespace WpfApp1
 
         public DatosClientesWrapper Answer
         {
-            get { return new DatosClientesWrapper() { Nombre = txtNombre.Text, DNI = txtDNI.Text, IBAN = txtIBAN.Text }; }
+            get { DatosClientesWrapper temp = new DatosClientesWrapper() { Nombre = txtNombre.Text, DNI = txtDNI.Text, IBAN = txtIBAN.Text };
+                temp.UpdateAscii();
+                return temp;
+            }
         }
 
     }

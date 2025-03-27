@@ -67,6 +67,13 @@ namespace WpfApp1
             wb.Save();
         }
 
+        public void AddAllData(List<DatosClientesWrapper> data)
+        {
+            foreach (DatosClientesWrapper dc in data) { 
+                AddDataToFile(dc.ToDatosClientes()); 
+            }
+        }
+
         public List<DatosClientes> FindClientes(string datosABuscar)
         {
             List<DatosClientes> busqueda = new List<DatosClientes>();

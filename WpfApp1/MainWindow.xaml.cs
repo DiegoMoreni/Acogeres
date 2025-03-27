@@ -23,7 +23,7 @@ namespace WpfApp1
 {
     public partial class MainWindow : Window
     {
-        string Version = "0.4";
+        string Version = "0.4.1";
 
         List<DatosClientesWrapper> itemsDatosClientes = new List<DatosClientesWrapper>();
         private GridViewColumnHeader listViewSortCol = null;
@@ -38,6 +38,8 @@ namespace WpfApp1
         static string opcionesPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Resources_NO_TOCAR");
         string opcionesFilePath = opcionesPath + @"\Opciones.json";
 
+        bool pagosModificado = false;
+        bool clientesModificado = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -60,6 +62,46 @@ namespace WpfApp1
             CollectionView viewPagos = (CollectionView)CollectionViewSource.GetDefaultView(lvPagos.ItemsSource);
             UpdateNumPagos();
             txtVersion.Content = "Versión: " + Version;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+
+            // Falta añadir logica para controlar cuando estan modificadas las cosas y cambiar el mensaje de acuerdo a ello.
+
+            if (pagosModificado)
+            {
+                MessageBoxResult result = MessageBox.Show("Hay pagos sin guardar. \nSi sales sin guardar se perderán esos pagos. \nPara guardarlos debes generar un archivo de pagos.\n¿Quieres salir de todas formas?", "Aviso", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.OK)
+                {
+                    e.Cancel = false;
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+
+            }
+            else
+            {
+                if (clientesModificado)
+                {
+                    MessageBoxResult result = MessageBox.Show("Hay datos de clientes sin guardar.\nSi sales sin guardar se perderán esos datos.\n¿Quieres guardarlos antes de salir?", "Aviso", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            dcr.AddAllData(itemsDatosClientes);
+                            e.Cancel = false;
+                            return;
+                        case MessageBoxResult.No:
+                            e.Cancel = false;
+                            return;
+                        case MessageBoxResult.Cancel:
+                            e.Cancel = true;
+                            return;
+                    }
+                }
+            }
         }
 
         private void HandleColumnHeaderSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
@@ -115,10 +157,11 @@ namespace WpfApp1
                 DatosClientesWrapper cliente = dialog.Answer;
                 itemsDatosClientes.Add(cliente);
                 CollectionViewSource.GetDefaultView(lvDatosClientes.ItemsSource).Refresh();
-                dcr.AddDataToFile(dialog.Answer.ToDatosClientes());
+                //dcr.AddDataToFile(dialog.Answer.ToDatosClientes());
                 MessageBox.Show("Se han añadido el cliente: " + dialog.Answer.ToString(), "Cliente añadido", MessageBoxButton.OK);
                 lvDatosClientes.SelectedItem = cliente;
                 lvDatosClientes.ScrollIntoView(lvDatosClientes.SelectedItem);
+                clientesModificado = true;
             }
         }
 
@@ -129,7 +172,7 @@ namespace WpfApp1
             EditClienteDialog dialog = new EditClienteDialog((DatosClientesWrapper)lvDatosClientes.SelectedItem);
             if(dialog.ShowDialog() == true)
             {
-                dcr.EditDataFromFile(((DatosClientesWrapper)lvDatosClientes.SelectedItem).ToDatosClientes(), dialog.Answer.ToDatosClientes());
+                //dcr.EditDataFromFile(((DatosClientesWrapper)lvDatosClientes.SelectedItem).ToDatosClientes(), dialog.Answer.ToDatosClientes());
                 itemsDatosClientes.Remove((DatosClientesWrapper)lvDatosClientes.SelectedItem);
                 itemsDatosClientes.Add(dialog.Answer);
             }
@@ -143,9 +186,9 @@ namespace WpfApp1
             MessageBoxResult result = MessageBox.Show("¿Eliminar el cliente "+ ((DatosClientesWrapper)lvDatosClientes.SelectedItem) + "? Este cambio es permanente y no se puede deshacer.", "Aviso", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.OK)
             {
-                dcr.RemoveDataFromFile(((DatosClientesWrapper)lvDatosClientes.SelectedItem).ToDatosClientes());
+                //dcr.RemoveDataFromFile(((DatosClientesWrapper)lvDatosClientes.SelectedItem).ToDatosClientes());
                 itemsDatosClientes.Remove((DatosClientesWrapper)lvDatosClientes.SelectedItem);
-                CollectionViewSource.GetDefaultView(lvDatosClientes.ItemsSource).Refresh();   
+                CollectionViewSource.GetDefaultView(lvDatosClientes.ItemsSource).Refresh();
             }
         }
 
@@ -170,11 +213,12 @@ namespace WpfApp1
 
         private void btnAddPago_Click(object sender, RoutedEventArgs e)
         {
-            AddPagoDialog dialog = new AddPagoDialog(dcr, itemsDatosClientes);
+            AddPagoDialog dialog = new AddPagoDialog(itemsDatosClientes);
             if (dialog.ShowDialog() == true)
             {
                 itemsPagosWrapper.Add(dialog.Answer);
                 CollectionViewSource.GetDefaultView(lvPagos.ItemsSource).Refresh();
+                pagosModificado = true;
             }
             UpdateNumPagos();
         }
@@ -210,6 +254,10 @@ namespace WpfApp1
             {
                 itemsPagosWrapper.Remove((PagosWrapper)lvPagos.SelectedItem);
                 CollectionViewSource.GetDefaultView(lvPagos.ItemsSource).Refresh();
+                if(itemsPagosWrapper.Count == 0)
+                {
+                    pagosModificado = false;
+                }
             }
             UpdateNumPagos();
         }
@@ -270,7 +318,10 @@ namespace WpfApp1
                     pagosList.Add(pw.GetPagos());
                 }
                 pWriter.SaveToExcel(pagosList.ToArray());
+                dcr.AddAllData(itemsDatosClientes);
                 MessageBox.Show("Se han generado el archivo de Pagos.", "Archivos generados", MessageBoxButton.OK);
+                clientesModificado = false;
+                pagosModificado = false;
             }
         }
 
@@ -299,10 +350,12 @@ namespace WpfApp1
                 foreach (PagosWrapper pw in itemsPagosWrapper)
                 {
                     Pagos p = pw.GetPagos();
-                    dyhList.Add(new(dcr.FindClientes(pw.Nombre)[0], p, pw.Comentario));
+                    //dyhList.Add(new(dcr.FindClientes(pw.Nombre)[0], p, pw.Comentario));
+                    dyhList.Add(new(itemsDatosClientes.Find(x => x.Nombre == pw.Nombre || x.asciiNombre == pw.Nombre).ToDatosClientes(), p, pw.Comentario));
                 }
                 dyhWriter.WriteToDoc(dyhList.ToArray());
                 MessageBox.Show("Se han generado el archivo de Datos y Horas.", "Archivos generados", MessageBoxButton.OK);
+                pagosModificado = false;
             }
         }
 
@@ -383,6 +436,8 @@ namespace WpfApp1
                 UpdateOptions();
             }
         }
+
+       
     }
 
     public class SortAdorner : Adorner
@@ -438,8 +493,18 @@ namespace WpfApp1
             Nombre = dc.datos[0];
             DNI = dc.datos[1];
             IBAN = dc.datos[2];
+            asciiNombre = "";
 
             string accentedStr = dc.datos[0]; 
+            byte[] tempBytes;
+            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(accentedStr);
+            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            asciiNombre = asciiStr;
+        }
+
+        public void UpdateAscii()
+        {
+            string accentedStr = Nombre;
             byte[] tempBytes;
             tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(accentedStr);
             string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);

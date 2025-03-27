@@ -7,3 +7,9 @@
 
 v0.4.1
 - Añadido proyecto a github.
+
+v0.5.0
+- Añadido mensaje de aviso al cerrar sin guardar datos.
+- Arreglado bug al añadir clientes que rompía el buscador.
+- Arreglado bug que impedía editar los pagos.
+- Modificado el funcionamiento de la BBDD para que solo guarde datos al generar los archivos o cerrar el programa.

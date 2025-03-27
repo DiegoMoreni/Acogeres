@@ -18,13 +18,12 @@ namespace WpfApp1
     public partial class AddPagoDialog : Window
     {
         float h, extra;
-        DatosClientesReader dcr;
+        //DatosClientesReader dcr;
         List<DatosClientesWrapper> list;
 
-        public AddPagoDialog(DatosClientesReader ndcr, List<DatosClientesWrapper> nlist)
+        public AddPagoDialog( List<DatosClientesWrapper> nlist)
         {
             InitializeComponent();
-            dcr = ndcr;
             list = nlist;
             txtNombre.ItemsSource = list;
         }
@@ -51,11 +50,11 @@ namespace WpfApp1
             if (String.IsNullOrWhiteSpace(txtComentario.Text))
                 txtComentario.Text = "";
 
-            if (dcr.FindClientes(txtNombre.Text).Count < 1)
+            /*if (dcr.FindClientes(txtNombre.Text).Count < 1)
             {
                 MessageBox.Show("Error: El nombre introducido no se corresponde con ningún cliente", "Error al introducir datos del pago", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
-            }
+            }*/
 
             this.DialogResult = true;
         }
