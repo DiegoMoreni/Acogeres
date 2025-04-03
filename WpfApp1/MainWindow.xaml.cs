@@ -175,6 +175,7 @@ namespace WpfApp1
                 //dcr.EditDataFromFile(((DatosClientesWrapper)lvDatosClientes.SelectedItem).ToDatosClientes(), dialog.Answer.ToDatosClientes());
                 itemsDatosClientes.Remove((DatosClientesWrapper)lvDatosClientes.SelectedItem);
                 itemsDatosClientes.Add(dialog.Answer);
+                clientesModificado = true;
             }
             CollectionViewSource.GetDefaultView(lvDatosClientes.ItemsSource).Refresh();
         }

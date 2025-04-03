@@ -64,6 +64,10 @@ namespace WpfApp1
             dt.Rows.Add(dc.datos[0], dc.datos[1], dc.datos[2]);
             ws.InsertRow(2);
             ws.InsertDataTable(dt, false, 2, 1, true);
+
+            //Esto igual da problemas.
+            //ws.Protect("", SheetProtectionType.All);
+            
             wb.Save();
         }
 

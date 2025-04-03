@@ -50,6 +50,8 @@ namespace WpfApp1
 
             SetStyle(doc, para);
 
+            doc.Protect(ProtectionType.AllowOnlyReading, "");
+
             //string path = Path.Combine(ruta, name);
             doc.SaveToFile(name, FileFormat.Docx2013);
         }

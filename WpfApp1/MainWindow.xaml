@@ -230,7 +230,7 @@
                             <StackPanel Grid.Column="3" HorizontalAlignment="Center" Grid.Row="0">
                                 <Button Name="btnModifRutaPagos" Click="btnModifRutaPagos_Click">Modificar</Button>
                                 <Button Name="btnModifRutaDyH" Click="btnModifRutaDyH_Click">Modificar</Button>
-                                <Button Name="testBug" Click="btnTestBug_Click">Bug</Button>
+                                <!--<Button Name="testBug" Click="btnTestBug_Click">Bug</Button>-->
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -240,14 +240,14 @@
                 </Grid>
             </TabItem>
 
-            <TabItem>
+            <!--<TabItem>
                 <TabItem.Header>
                     <Label Content="Instrucciones de uso" MouseLeftButtonDown="tabItem_Click"/>
                 </TabItem.Header>
                 <WrapPanel>
                     
                 </WrapPanel>
-            </TabItem>
+            </TabItem>-->
             </TabControl>
     </DockPanel>
 </Window>

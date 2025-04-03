@@ -13,3 +13,9 @@ v0.5.0
 - Arreglado bug al añadir clientes que rompía el buscador.
 - Arreglado bug que impedía editar los pagos.
 - Modificado el funcionamiento de la BBDD para que solo guarde datos al generar los archivos o cerrar el programa.
+
+v0.6
+- Eliminado el botón "bug" de las opciones.
+- Añadido símbolo de euro en el apartado extras de los diálogos Añadir Pagos y Editar pagos.
+- Arreglado bug en editar cliente que no marcaba los cambios.
+- Añadida protección contra escritura en los archivos de Pagos y de Datos y Horas.

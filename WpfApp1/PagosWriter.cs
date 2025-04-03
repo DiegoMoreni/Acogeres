@@ -89,6 +89,8 @@ namespace WpfApp1
 
             sheet.InsertDataTable(dt, false, 7, 1, true);
 
+            sheet.Protect("", SheetProtectionType.All);
+
             //string path = Path.Combine(ruta, name);
             wb.SaveToFile(name, ExcelVersion.Version97to2003);
         }
