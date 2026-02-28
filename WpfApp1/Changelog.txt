@@ -19,3 +19,6 @@ v0.6
 - Añadido símbolo de euro en el apartado extras de los diálogos Añadir Pagos y Editar pagos.
 - Arreglado bug en editar cliente que no marcaba los cambios.
 - Añadida protección contra escritura en los archivos de Pagos y de Datos y Horas.
+
+v0.6.1
+- Arreglado bug al modificar precio/IVA

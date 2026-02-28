@@ -23,7 +23,7 @@ namespace WpfApp1
 {
     public partial class MainWindow : Window
     {
-        string Version = "0.6.0";
+        string Version = "0.6.1";
 
         List<DatosClientesWrapper> itemsDatosClientes = new List<DatosClientesWrapper>();
         private GridViewColumnHeader listViewSortCol = null;

@@ -24,7 +24,7 @@ namespace WpfApp1
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(txtValor.Text, out _))
+            if (!float.TryParse(txtValor.Text, out _))
             {
                 MessageBox.Show("Error: El valor introducido debe ser un número", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
